@@ -84,7 +84,6 @@ function getPostDate(urn) {
   return dateString;
 }
 
-
 function getNumberOfReposts() {
   const socialDetails = document.querySelector(
     "[class*=social-details-social-counts]"
@@ -95,7 +94,6 @@ function getNumberOfReposts() {
   const repostItem = [...countItems].filter((i) =>
     i.innerText.includes("gedeeld")
   );
-
   if (repostItem.length === 1) {
     return parseInt(repostItem[0].innerText.match(/[0-9]+/)[0], 10);
   } else {
@@ -207,7 +205,6 @@ function seeMore() {
   } catch (e) { }
 }
 
-
 function loadMoreComments(overwrite = false) {
   let x = document.querySelector(
     '[class*="comments-comments-list__show-previous-container"]'
@@ -256,17 +253,16 @@ function convertToDays(dateStr) {
   return num * unitDays;
 }
 
-
 async function sortCommentsByRecent() {
   const toggleButton = document.querySelector(
     "[class*=comments-sort-order-toggle]"
   );
   if (toggleButton === null) {
     return;
-  } else if (toggleButton.innerText.includes("Meest recente")) {
+  } else if (toggleButton.innerText.toLowerCase().includes("most recent")) {
     return false;
   }
-  console.info("Reacties sorteren op meest recente...");
+  console.info("Sort comments by most recent...");
   toggleButton.querySelector("button").click();
   let i = 0;
   const dropdownInteraction = setInterval(() => {
@@ -285,7 +281,6 @@ async function sortCommentsByRecent() {
   return true;
 }
 
-
 function getPostBody() {
   const postBody = document
     .querySelector("main")
@@ -293,7 +288,6 @@ function getPostBody() {
     .querySelector("[class*=components-text]").innerText;
   return postBody;
 }
-
 
 function getComments() {
   let comments = document.querySelector("[class*=comments-list]");
@@ -353,12 +347,9 @@ function getActorName() {
 }
 
 function saveData(postData, nameType = 'fromURL', stringify = true, ext = "json") {
-
   if (nameType === 'fromURL') {
-
     let searchRef = ""
     try {
-
       searchRef = document.location.search;
       if (searchRef) {
         searchRef = searchRef.split('=');
@@ -367,9 +358,7 @@ function saveData(postData, nameType = 'fromURL', stringify = true, ext = "json"
         searchRef = `_${searchRef[1]}`
       }
     } catch (error) {
-
     }
-
     let fileName = document.location.pathname.slice(1).slice(0, -1).replaceAll("/", "_");
     fileName = `${fileName}${searchRef}`;
     if (stringify) {
@@ -398,7 +387,6 @@ function disableTabs() {
   document.cookie = "tabsDisabled=true";
 }
 
-
 async function parseURLsFromFiles() {
   const response = await fetch(chrome.runtime.getURL("/urls.txt"));
   if (!response.ok) {
@@ -411,14 +399,12 @@ async function parseURLsFromFiles() {
   return filteredLines;
 }
 
-
 function goToVideos() {
   if (!document.location.search.includes('feedView=images')) {
     return;
   }
   [...document.querySelector('[class*=org-feed-filters]').querySelectorAll('[role="tab"]')].filter((x) => x.innerText.match(/^Videos$/))[0].click();
 }
-
 
 function checkedIsAll() {
   let x = false;
@@ -441,6 +427,7 @@ function isPostTooOld(urn) {
     return false;
   }
 }
+
 function getMaxHistory() {
   let x = document.cookie;
   if (x.includes("maxHistory")) {
@@ -548,8 +535,8 @@ function promptHash(title, callback) {
     color: "white",
     borderRadius: "5px"
   });
-  promptDiv.appendChild(submitButton);
 
+  promptDiv.appendChild(submitButton);
   document.body.appendChild(promptDiv);
   promptInput.focus();
 
@@ -593,8 +580,6 @@ const title = `Stel de tijdsperiode in met een getal en tijdseenheid:<br><br>
   </tr>
 </table><br>Voorbeeld:  '2y' voor berichten van de afgelopen 2 jaar.<br><br>Je kunt de periode ook instellen via de URL met een hashtag:<br><a href="#">linkedin.com/posts/dit-is-een-post?feedView=images#2y</a><br><br>Het getal en de eenheid gelden als bovengrens. Oudere berichten worden niet meegenomen.`;
 
-
-
 let didDownload = 0;
 let allCommentsLoaded = 0;
 let reactionDetails = null;
@@ -609,30 +594,14 @@ let postData;
 let iterations = 0;
 let maxHistory = null;
 document.cookie = "maxHistory=null";
-
 const waitForPage = setInterval(() => {
   if (document.readyState === "complete") {
     clearInterval(waitForPage);
   }
 }, 1000);
-
 checkLanguage();
 
 const mainLoop = setInterval(async () => {
-  console.log(`${document.location.pathname} ${document.location.search}`);
-
-  // if (document.location.pathname.includes("/company/")) {
-  //   document.querySelectorAll('[class*=org-page-navigation] [href]').forEach(link => {
-  //     if (/\/company\/.*\/posts\//.test(link.href)) {
-  //       link.href = link.href + '?feedView=images';
-  //       link.addEventListener('click', e => {
-  //         e.preventDefault();
-  //         window.location.href = link.href.replace(/\?feedView=all$/, '');
-  //       });
-  //     }
-  //   });
-  // }
-
   if (document.location.search.includes('feedView')) {
     console.log(`feedView is set: ${document.location.search}`);
     if (document.location.search.includes('feedView=all')) {
@@ -640,10 +609,9 @@ const mainLoop = setInterval(async () => {
       document.location.href = `${document.location.origin}${document.location.pathname}?feedView=images${document.location.hash}`;
       return;
     } else {
-      const maxHistory = checkHash();
+      //
     }
-
-
+    const maxHistory = checkHash();
     if (maxHistory === null) {
       if (!document.getElementById("blurryOverlay")) {
         blurWebpage("on");
@@ -656,32 +624,25 @@ const mainLoop = setInterval(async () => {
       return;
     }
     blurWebpage("off");
-
     disableTabs();
-
     const urn = document.querySelectorAll("[data-urn]")[0];
     document.querySelector('body').scrollIntoView();
-
     if (isPostTooOld(urn)) {
       saveData(urnURLs.join(","), 'fromURL', false, 'txt')
-
       if (document.location.search.includes('feedView=images')) {
         document.location.href = `${document.location.origin}${document.location.pathname}?feedView=videos${document.location.hash}`;
       } else if (document.location.search.includes('feedView=videos')) {
-        document.location = document.location.origin;
+        document.location = `${document.location.origin}/posts/done/`;
         clearInterval(mainLoop);
       }
     }
-
     try {
       urn.nextElementSibling.click();
     } catch (error) { }
-
     urn
       .querySelector("[class*=feed-shared-control-menu]")
       .querySelector("button")
       .click();
-
     const x = setInterval(() => {
       try {
         const copyLink = [...document.querySelectorAll("h5")].filter(
@@ -693,7 +654,6 @@ const mainLoop = setInterval(async () => {
         }
       } catch (error) { }
     }, 1000);
-
     const y = setInterval(() => {
       try {
         const toast = document.querySelector(
@@ -711,11 +671,6 @@ const mainLoop = setInterval(async () => {
       } catch (error) { }
     }, 1000);
   } else if (document.location.pathname.startsWith("/posts/")) {
-    if (iterations === 0) {
-      //  window.onerror = globalErrorHandler;
-    }
-
-
     if (document.location.pathname.includes("/posts/done")) {
       let outlet = document.querySelector('[class=application-outlet]').querySelector('section');
       if (outlet.querySelector('h2') !== null) {
@@ -727,7 +682,6 @@ const mainLoop = setInterval(async () => {
       }
       return;
     }
-
     if (document.location.pathname.includes("/posts/scrape")) {
       let outlet = document.querySelector('[class=application-outlet]').querySelector('section');
       if (outlet.querySelector('h2') !== null) {
@@ -738,7 +692,6 @@ const mainLoop = setInterval(async () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     }
-
     if (iterations > 10) {
       if (!document.body.querySelector("main")) {
         document.location.reload(true);
@@ -748,7 +701,6 @@ const mainLoop = setInterval(async () => {
       if (didDownload === 0) {
         if (nextPath === null) {
           const URLs = await parseURLsFromFiles();
-
           if (document.location.pathname.includes("/posts/scrape")) {
             console.info(`${URLs.length} URLs zijn geladen`);
             window.open(URLs[0], "_blank");
@@ -765,12 +717,10 @@ const mainLoop = setInterval(async () => {
           }
         }
         await sortCommentsByRecent();
-
         loadedCommentsCountArray.push(getNumberOfLoadedComments());
         if (countDuplicates(loadedCommentsCountArray) > 3) {
           doOverwrite = true;
         }
-
         hasButton = loadMoreComments(doOverwrite);
         if (hasButton === false) {
           allCommentsLoaded++;
@@ -782,7 +732,6 @@ const mainLoop = setInterval(async () => {
           return;
         }
       }
-
       const translationButtons = document.querySelectorAll(
         "[class*=comments-see-translation-button]"
       );
@@ -790,7 +739,6 @@ const mainLoop = setInterval(async () => {
         console.info("Vertaalbuttons worden verwijderd...");
         translationButtons.forEach((i) => i.remove());
       }
-
       if (reactionDetails === null) {
         console.info("Reactiedetails worden opgehaald...");
         await triggerClickAndGetDetails()
@@ -807,7 +755,6 @@ const mainLoop = setInterval(async () => {
           dismissButton.click();
         }
       }
-
       if (didDownload === 0) {
         const actorName = getActorName();
         const actorContainer = document.querySelector(
@@ -825,7 +772,6 @@ const mainLoop = setInterval(async () => {
           comments,
           reactionDetails
         ];
-
         console.info("Postgegevens worden opgeslagen...");
         didDownload++;
       } else if (didDownload === 1) {
@@ -837,8 +783,9 @@ const mainLoop = setInterval(async () => {
             console.info(`Navigeren naar volgende bericht: ${nextPath}`);
             document.location.pathname = nextPath;
           } else if (nextPath === "last") {
-            alert("Geen berichten meer om te verzamelen");
-            chrome.runtime.sendMessage({ message: "closeTab" });
+            document.location = `${document.location.origin}/posts/done/`;
+            // alert("Geen berichten meer om te verzamelen");
+            //  chrome.runtime.sendMessage({ message: "closeTab" });
             clearInterval(mainLoop);
           }
         } catch (error) {
@@ -851,8 +798,6 @@ const mainLoop = setInterval(async () => {
     } catch (error) {
       console.error(error);
     }
-
-
   }
   iterations += 1;
 }, 1500)
