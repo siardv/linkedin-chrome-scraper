@@ -1,0 +1,55 @@
+{
+  "name": "LinkedIn scraper",
+  "description": "This extension scrapes LinkedIn posts, with JSON output.",
+  "version": "1.0.0",
+  "author": {
+    "name": "siardv",
+    "url": "https://github.com/siardv"
+  },
+  "manifest_version": 3,
+  "permissions": [
+    "activeTab",
+    "cookies",
+    "management",
+    "scripting",
+    "background",
+    "sessions",
+    "storage",
+    "tabs",
+    "clipboardRead",
+    "declarativeContent",
+    "downloads",
+    "webNavigation",
+    "webRequest",
+    "windows",
+    "identity",
+    "privacy"
+  ],
+  "host_permissions": [
+    "*://*.linkedin.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*.linkedin.com/*"
+      ],
+      "js": [
+        "background.js",
+        "content-script.js"
+      ]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "/urls.txt"
+      ],
+      "matches": [
+        "*://*.linkedin.com/*"
+      ]
+    }
+  ]
+}
