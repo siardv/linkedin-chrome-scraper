@@ -10,20 +10,10 @@
   "permissions": [
     "activeTab",
     "cookies",
-    "management",
     "scripting",
-    "background",
-    "sessions",
     "storage",
-    "tabs",
-    "clipboardRead",
     "declarativeContent",
-    "downloads",
-    "webNavigation",
-    "webRequest",
-    "windows",
-    "identity",
-    "privacy"
+    "tabs"
   ],
   "host_permissions": [
     "*://*.linkedin.com/*"

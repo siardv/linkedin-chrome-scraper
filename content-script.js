@@ -1,3 +1,5 @@
+document.body.style.zoom = "50%";
+
 function globalErrorHandler(message, source, lineno, colno, error) {
   if (window.location.pathname.includes("/posts/")) {
     console.error("Caught error:", message, source, lineno, colno, error);
@@ -102,15 +104,15 @@ function getNumberOfReposts() {
 }
 
 function getNumberOfComments() {
-  const socialDetails = document.querySelector(
-    "[class*=social-details-social-counts]"
-  );
-  const countItems = socialDetails.querySelectorAll(
-    "[class*=social-details-social-counts__item]"
-  );
+  const socialDetails = document.querySelector("[class*=social-details-social-counts]");
+  if (!socialDetails) {
+    console.log("No social details element found.");
+    return 0;
+  }
+  const countItems = socialDetails.querySelectorAll("[class*=social-details-social-counts__item]");
   const commentItem = [...countItems].filter((i) =>
     i.innerText.match(/[0-9]+ comment[s]?/)
-  )
+  );
 
   if (commentItem.length === 1) {
     return parseInt(commentItem[0].innerText.match(/[0-9]+/)[0], 10);
