@@ -12,6 +12,7 @@
     "cookies",
     "scripting",
     "storage",
+    "downloads",
     "declarativeContent",
     "tabs"
   ],
@@ -27,7 +28,6 @@
         "*://*.linkedin.com/*"
       ],
       "js": [
-        "background.js",
         "content-script.js"
       ]
     }
