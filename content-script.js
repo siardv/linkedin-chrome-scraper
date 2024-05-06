@@ -1,15 +1,16 @@
-document.body.style.zoom = "50%";
 
-function globalErrorHandler(message, source, lineno, colno, error) {
-  if (window.location.pathname.includes("/posts/")) {
-    console.error("Caught error:", message, source, lineno, colno, error);
-    if (message.includes("ERR_NETWORK_CHANGED")) {
-      window.location.reload(true);
+if (typeof window !== 'undefined') {
+  function globalErrorHandler(message, source, lineno, colno, error) {
+    if (window.location.pathname.includes("/posts/")) {
+      console.error("Caught error:", message, source, lineno, colno, error);
+      if (message.includes("ERR_NETWORK_CHANGED")) {
+        window.location.reload(true);
+      }
     }
   }
-}
 
-window.onerror = globalErrorHandler;
+  window.onerror = globalErrorHandler;
+}
 
 function checkLanguage() {
   let lang = [...document.cookie.split("; ")].filter((i) => i.includes("lang"));
@@ -551,7 +552,7 @@ function promptHash(title, callback) {
   function submitValue() {
     if (promptInput.value.match(/^\d{1,2}[ymw]$/)) {
       callback(promptInput.value);
-      toggleBlur();
+      blurWebpage("off");
       document.body.removeChild(promptDiv);
     } else {
       promptInput.value = "";
@@ -627,6 +628,7 @@ const mainLoop = setInterval(async () => {
     }
     blurWebpage("off");
     disableTabs();
+    // document.body.style.zoom = "50%";
     const urn = document.querySelectorAll("[data-urn]")[0];
     document.querySelector('body').scrollIntoView();
     if (isPostTooOld(urn)) {
@@ -635,6 +637,7 @@ const mainLoop = setInterval(async () => {
         document.location.href = `${document.location.origin}${document.location.pathname}?feedView=videos${document.location.hash}`;
       } else if (document.location.search.includes('feedView=videos')) {
         document.location = `${document.location.origin}/posts/done/`;
+        document.body.style.zoom = "100%";
         clearInterval(mainLoop);
       }
     }
@@ -656,6 +659,7 @@ const mainLoop = setInterval(async () => {
         }
       } catch (error) { }
     }, 1000);
+
     const y = setInterval(() => {
       try {
         const toast = document.querySelector(
@@ -674,6 +678,7 @@ const mainLoop = setInterval(async () => {
     }, 1000);
   } else if (document.location.pathname.startsWith("/posts/")) {
     if (document.location.pathname.includes("/posts/done")) {
+      document.body.style.zoom = "100%";
       let outlet = document.querySelector('[class=application-outlet]').querySelector('section');
       if (outlet.querySelector('h2') !== null) {
         outlet.querySelector('h2').innerText = "Klaar!";
@@ -685,6 +690,7 @@ const mainLoop = setInterval(async () => {
       return;
     }
     if (document.location.pathname.includes("/posts/scrape")) {
+      document.body.style.zoom = "50%";
       let outlet = document.querySelector('[class=application-outlet]').querySelector('section');
       if (outlet.querySelector('h2') !== null) {
         outlet.querySelector('h2').innerText = "Laden...";
