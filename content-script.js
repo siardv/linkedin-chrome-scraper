@@ -640,7 +640,8 @@ const mainLoop = setInterval(async () => {
     const urn = document.querySelectorAll("[data-urn]")[0];
     document.querySelector('body').scrollIntoView();
     if (isPostTooOld(urn)) {
-      saveData(urnURLs.join(","), 'fromURL', false, 'txt')
+      const urnURLsUnique = [...new Set(urnURLs)];
+      saveData(urnURLsUnique.join(","), 'fromURL', false, 'txt')
       if (document.location.search.includes('feedView=images')) {
         document.location.href = `${document.location.origin}${document.location.pathname}?feedView=videos${document.location.hash}`;
       } else if (document.location.search.includes('feedView=videos')) {
