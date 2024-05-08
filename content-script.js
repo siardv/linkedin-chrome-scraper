@@ -284,7 +284,7 @@ async function sortCommentsByRecent() {
   const dropdownInteraction = setInterval(() => {
     i++;
     [...toggleButton.querySelector("[class*=artdeco-dropdown]").querySelectorAll("li")].pop().click();
-    if (i >= 1) {
+    if (i > 1) {
       clearInterval(dropdownInteraction);
     }
   }, 1000);
@@ -641,7 +641,7 @@ const mainLoop = setInterval(async () => {
     document.querySelector('body').scrollIntoView();
     if (isPostTooOld(urn)) {
       const urnURLsUnique = [...new Set(urnURLs)];
-      saveData(urnURLsUnique.join(","), 'fromURL', false, 'txt')
+      saveData(urnURLsUnique.join("\n"), 'fromURL', false, 'txt')
       if (document.location.search.includes('feedView=images')) {
         document.location.href = `${document.location.origin}${document.location.pathname}?feedView=videos${document.location.hash}`;
       } else if (document.location.search.includes('feedView=videos')) {
@@ -674,12 +674,10 @@ const mainLoop = setInterval(async () => {
         const toast = document.querySelector(
           '[class="artdeco-toast-item__content"]'
         );
-        toast.querySelector("a[href]").pathname;
         if (toast) {
-          const urnURL = toast.querySelector("a[href]").href;
+          const urnURL = toast.querySelector("a[href]").pathname;
           urnURLs.push(urnURL);
           console.info(urnURL);
-
           toast.parentElement.querySelector("button").click();
           urn.remove();
           clearInterval(y);
