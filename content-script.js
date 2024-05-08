@@ -1,4 +1,3 @@
-
 if (typeof window !== 'undefined') {
   function globalErrorHandler(message, source, lineno, colno, error) {
     if (window.location.pathname.includes("/posts/")) {
@@ -284,14 +283,8 @@ async function sortCommentsByRecent() {
   let i = 0;
   const dropdownInteraction = setInterval(() => {
     i++;
-    [
-      ...toggleButton
-        .querySelector("[class*=artdeco-dropdown]")
-        .querySelectorAll("li")
-    ]
-      .pop()
-      .click();
-    if (i > 1) {
+    [...toggleButton.querySelector("[class*=artdeco-dropdown]").querySelectorAll("li")].pop().click();
+    if (i >= 1) {
       clearInterval(dropdownInteraction);
     }
   }, 1000);
@@ -410,9 +403,10 @@ async function parseURLsFromFiles() {
     throw new Error(`Failed to fetch the file`);
   }
   const text = await response.text();
-  const lines = text.split(",");
+  const lines = text.split("\n");
   const trimmedLines = lines.map((line) => line.trim());
   const filteredLines = trimmedLines.filter((line) => line.length > 0);
+  console.info(`URLs geladen: ${filteredLines.length}`);
   return filteredLines;
 }
 
@@ -679,6 +673,7 @@ const mainLoop = setInterval(async () => {
         const toast = document.querySelector(
           '[class="artdeco-toast-item__content"]'
         );
+        toast.querySelector("a[href]").pathname;
         if (toast) {
           const urnURL = toast.querySelector("a[href]").href;
           urnURLs.push(urnURL);
