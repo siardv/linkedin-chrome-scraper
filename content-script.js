@@ -79,12 +79,26 @@ function getShowMoreResultsButton(clickButton = false) {
 }
 
 function getPostDate(urn) {
-  const anchorElements = [...urn.querySelectorAll("a[aria-label]")];
-  const lastAnchorElement = anchorElements.pop();
-  const ariaLabelValue = lastAnchorElement.ariaLabel;
-  const dateMatch = ariaLabelValue.match(/[0-9]+[a-z]+/);
-  const dateString = dateMatch[0];
-  return dateString;
+  /*
+    const anchorElements = [...urn.querySelectorAll("a[aria-label]")];
+    const lastAnchorElement = anchorElements.pop();
+    const ariaLabelValue = lastAnchorElement.ariaLabel;
+    const dateMatch = ariaLabelValue.match(/[0-9]+[a-z]+/);
+    const dateString = dateMatch[0];
+    return dateString;
+  */
+  let x = urn.querySelector('[class*=update-components-actor__meta]')
+  if (x) {
+    x = x.querySelectorAll('a');
+    x = [...x].filter(i => i.innerText.endsWith('ago'))
+    if (x.length === 1) {
+      x = x[0];
+      if (x.innerText.includes('•')) {
+        x = x.innerText.split('•')[0].trim();
+        return x
+      }
+    }
+  }
 }
 
 function getNumberOfReposts() {
