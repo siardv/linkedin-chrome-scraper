@@ -256,9 +256,9 @@ function convertToDays(dateStr) {
   const num = Number(dateStr.replace(/[a-z]+/, ''));
   const unit = dateStr.replace(/\d+/, '');
   const unitDays = {
-    's': 1,
-    'm': 1,
-    'h': 1,
+    's': 0,
+    'm': 0,
+    'h': 0,
     'd': 1,
     'w': 7,
     'm': 30,
@@ -440,14 +440,20 @@ function isPostTooOld(urn) {
 }
 
 function getMaxHistory() {
-  let x = document.cookie;
-  if (x.includes("maxHistory")) {
-    x = x.match(/maxHistory=([0-9]+[a-z]+)/);
-    if (x) {
-      return x[1];
+  const y = document.location.hash.replace('#', '');
+  if (y === '') {
+
+    let x = document.cookie;
+    if (x.includes("maxHistory")) {
+      x = x.match(/maxHistory=([0-9]+[a-z]+)/);
+      if (x) {
+        return x[1];
+      }
     }
+    return null;
+  } else {
+    return y;
   }
-  return null;
 }
 
 function checkHash(setHash = null) {
@@ -645,9 +651,11 @@ const mainLoop = setInterval(async () => {
       if (document.location.search.includes('feedView=images')) {
         document.location.href = `${document.location.origin}${document.location.pathname}?feedView=videos${document.location.hash}`;
       } else if (document.location.search.includes('feedView=videos')) {
-        document.location = `${document.location.origin}/posts/done/`;
-        document.body.style.zoom = "100%";
-        clearInterval(mainLoop);
+        if (isPostTooOld(urn)) {
+          document.location = `${document.location.origin}/posts/done/`;
+          document.body.style.zoom = "100%";
+          clearInterval(mainLoop);
+        }
       }
     }
     try {
