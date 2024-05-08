@@ -407,10 +407,10 @@ function disableTabs() {
 async function parseURLsFromFiles() {
   const response = await fetch(chrome.runtime.getURL("/urls.txt"));
   if (!response.ok) {
-    throw new Error(`Failed to fetch the file: ${filePath}`);
+    throw new Error(`Failed to fetch the file`);
   }
   const text = await response.text();
-  const lines = text.split("\n");
+  const lines = text.split(",");
   const trimmedLines = lines.map((line) => line.trim());
   const filteredLines = trimmedLines.filter((line) => line.length > 0);
   return filteredLines;
