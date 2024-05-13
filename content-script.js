@@ -292,11 +292,21 @@ async function sortCommentsByRecent() {
 }
 
 function getPostBody() {
-  const postBody = document
-    .querySelector("main")
-    .querySelector("[class*=description-wrapper]")
-    .querySelector("[class*=components-text]").innerText;
-  return postBody;
+  try {
+    const postBodyElement = document
+      .querySelector("main")
+      .querySelector("[class*=description-wrapper]")
+      .querySelector("[class*=components-text]");
+
+    if (postBodyElement) {
+      return postBodyElement.innerText;
+    } else {
+      return "";
+    }
+  } catch (error) {
+    console.error(error);
+    return "";
+  }
 }
 
 function getComments() {
